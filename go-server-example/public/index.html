@@ -16,7 +16,7 @@
     <div id="mainForm" class="ui large form">
       <h2 class="ui center aligned icon header loginText">
         <img src="images/logo.png" class="ui circular icon loginLogo">
-        VoiceIt API 2 Web Example
+        VoiceIt API 3 Web Example
       </h2>
 
       <div id="formOverlay">

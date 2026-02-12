@@ -183,7 +183,7 @@ func (websdk WebSDK) MakeCall(r *http.Request) (map[string]interface{}, error) {
 	var clientResponseBytes []byte
 	var err error
 
-	// Take file from multpart form request, copy to bytes.Buffer (Usable in client side requests to API 2/Liveness Server), without having to write to disk
+	// Take file from multpart form request, copy to bytes.Buffer (Usable in client side requests to API 3/Liveness Server), without having to write to disk
 	if viRequestType == "createVoiceEnrollment" || viRequestType == "createFaceEnrollment" || viRequestType == "createVideoEnrollment" || viRequestType == "voiceVerification" || viRequestType == "faceVerification" || viRequestType == "faceVerificationWithLiveness" || viRequestType == "videoVerificationWithLiveness" || viRequestType == "videoVerification" {
 
 		var key string
@@ -224,7 +224,7 @@ func (websdk WebSDK) MakeCall(r *http.Request) (map[string]interface{}, error) {
 			filename = header.Filename + extension
 		}
 
-		// Make client request to API 2/Liveness Server
+		// Make client request to API 3/Liveness Server
 	} else if viRequestType == "enoughVoiceEnrollments" || viRequestType == "enoughFaceEnrollments" || viRequestType == "enoughVideoEnrollments" {
 		return websdk.enoughEnrollments(res, viRequestType, userId)
 		// return
