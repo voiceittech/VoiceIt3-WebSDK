@@ -2,7 +2,7 @@ const express = require('express')
 const session = require('express-session')
 const bodyParser = require('body-parser')
 const config = require('./config')
-const VoiceIt2WebSDK = require('../voiceit-node-websdk')
+const VoiceIt3WebSDK = require('../voiceit-node-websdk')
 // const  = require('../voiceit-node-websdk/tokenGenerator')
 const app = express();
 const port = 3000
@@ -30,7 +30,7 @@ const multer = require('multer')()
 app.post('/example_endpoint', multer.any(), function (req, res) {
   console.log('/example_endpoint');
   //the token comes in from the fron end in the request body
-    const myVoiceIt = new VoiceIt2WebSDK.Voiceit2(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
+    const myVoiceIt = new VoiceIt3WebSDK.Voiceit3(config.VOICEIT_API_KEY, config.VOICEIT_API_TOKEN, {sessionExpirationTimeHours:config.SESSION_EXPIRATION_TIME_HOURS});
     myVoiceIt.makeCall(req, res, function(jsonObj){
       if (
           (jsonObj.callType.includes('Liveness') && jsonObj.jsonResponse.success) || // Liveness Server returns success true/false instead of responseCode
@@ -52,7 +52,7 @@ app.post('/login', function (req, res) {
     const userId = config.VOICEIT_TEST_USER_ID;
     if (userId.substring(0,4) === 'usr_'){
       //use the token generator to generate a token passed to the client
-      generatedToken = VoiceIt2WebSDK.generateTokenForUser({
+      generatedToken = VoiceIt3WebSDK.generateTokenForUser({
           userId: config.VOICEIT_TEST_USER_ID,
           token: config.VOICEIT_API_TOKEN,
           sessionExpirationTimeHours: config.SESSION_EXPIRATION_TIME_HOURS

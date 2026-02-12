@@ -136,7 +136,7 @@ Parts of the Example can be incorporated for any specific use-case. Each type (v
 ##### *PHP*
 Please copy the folder `VoiceIt3-WebSDK/voiceit-php-websdk` to you project root.
 
-The base module for the backend is `VoiceIt3-WebSDK/voiceit-php-websdk/VoiceIt2VoiceIt2WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
+The base module for the backend is `VoiceIt3-WebSDK/voiceit-php-websdk/VoiceIt3WebBackend.php`. This module is responsible for making API calls, and communicating between the client and VoiceIt's API, it will deal with the processes required to perform a specific action (any from the possible 27) for a specific user, in a specific web session.
 
 ##### *NodeJS*
 Please copy the folder `VoiceIt3-WebSDK/voiceit-node-websdk` to you project root. Now navigate to `voiceit-node-websdk` folder via the command line and run the command `npm install` or `yarn install` depending on your preferred package manager.
@@ -146,14 +146,14 @@ The base module for the backend is `voiceit-node-websdk`. This module is respons
 #### Initializing the Base Module
 
 ##### *PHP*
-The base module needs to be initialized in a file that is publicly accessible via the server, such as `VoiceIt3-WebSDK/php-server-example/example_endpoint/index.php`. Initialize the VoiceIt2VoiceIt2WebBackend like the following
+The base module needs to be initialized in a file that is publicly accessible via the server, such as `VoiceIt3-WebSDK/php-server-example/example_endpoint/index.php`. Initialize the VoiceIt3WebBackend like the following
 
 ```php
 // Note: You might have to modify the require path of the voiceit-php-websdk folder
 // depending on where you placed the folder in your project
-require('voiceit-php-websdk/VoiceIt2WebBackend.php');
+require('voiceit-php-websdk/VoiceIt3WebBackend.php');
 // Replace these strings with your own credentials
-$myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
+$myVoiceIt = new VoiceIt3WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
 
 // Define a callback function to capture the response when a verification request completes.
 
@@ -179,12 +179,12 @@ The base module needs to be initialized at a `POST` endpoint publicly accessible
 
 ```javascript
 ...
-const VoiceIt2WebSDK = require('../voiceit-node-websdk')
+const VoiceIt3WebSDK = require('../voiceit-node-websdk')
 const multer = require('multer')()
 
 
 app.post('/example_endpoint', multer.any(), function (req, res) {
-	const myVoiceIt = new VoiceIt2WebSDK("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
+	const myVoiceIt = new VoiceIt3WebSDK("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN");
 	myVoiceIt.initBackend(req, res, function(jsonObj){
 		const callType = jsonObj.callType.toLowerCase();
 		const userId = jsonObj.userId;
@@ -223,14 +223,14 @@ Similarly to `VoiceIt3-WebSDK/php-server-example/login/index.php` or the `/login
 ```php
 // Note: You might have to modify the require path of the voiceit-php-websdk folder
 // depending on where you placed the folder in your project
-require('voiceit-php-websdk/VoiceIt2WebBackend.php');
+require('voiceit-php-websdk/VoiceIt3WebBackend.php');
 
 // Upon a successful login, lookup the associated VoiceIt userId
 $VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
 
 header("HTTP/1.1 200 OK");
 // Initialize module and replace this with your own credentials
-$myVoiceIt = new VoiceIt2WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN_HERE");
+$myVoiceIt = new VoiceIt3WebBackend("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN_HERE");
 
 // Generate a new token for the userId
 $createdToken = $myVoiceIt->generateTokenForUser($VOICEIT_USERID);
@@ -250,14 +250,14 @@ echo json_encode($jsonResponse);
 ##### *NodeJS*
 ```javascript
 ...
-const VoiceIt2WebSDK = require('../voiceit-node-websdk');
+const VoiceIt3WebSDK = require('../voiceit-node-websdk');
 
 app.get('/login', function (req, res) {
 	// Upon a successful login, lookup the associated VoiceIt userId
 	const VOICEIT_USERID = "VOICEIT_USER_ID_AFTER_DATABASE_LOOKUP";
 
 	// Initialize module and replace this with your own credentials
-	const myVoiceIt = new VoiceIt2WebSDK("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN_HERE");
+	const myVoiceIt = new VoiceIt3WebSDK("VOICEIT_API_KEY_HERE", "VOICEIT_API_TOKEN_HERE");
 
 	// Generate a new token for the userId
 	const createdToken = myVoiceIt.generateTokenForUser(VOICEIT_USERID);
@@ -276,19 +276,19 @@ The frontend can be implemented in a modular fashion - each type (voice, face, a
 
 #### Initializing the frontend
 
-To incorporate the frontend, please copy the file `VoiceIt3-WebSDK/dist/voiceit2.min.js` (javascript library) to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
+To incorporate the frontend, please copy the file `VoiceIt3-WebSDK/dist/voiceit3.min.js` (javascript library) to your public directory exposed via the web server or to a designated folder for other included javascript files on the webpage for authentication.
 
-Then include the minified JavaScript file `voiceit2.min.js` via a script tag on the webpage.
+Then include the minified JavaScript file `voiceit3.min.js` via a script tag on the webpage.
 
 ```html
-<script src='/voiceit2.min.js'></script>
+<script src='/voiceit3.min.js'></script>
 ```
 
 Now we can initialize the frontend object, it takes the relative public path to the backend end point where the backend is initialized, such as the `example_endpoint` demonstrated in PHP and NodeJS above, and the content-Language parameter. This should have been copied to the server's public directly in the step [Initializing the frontend](#initializing-the-frontend) above.
 
 ```javascript
 // The
-var myVoiceIt = new VoiceIt2.initialize('/example_endpoint/', 'content_language');
+var myVoiceIt = new VoiceIt3.initialize('/example_endpoint/', 'content_language');
 ```
 
 #### Setting Theme Color

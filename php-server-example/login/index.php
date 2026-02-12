@@ -1,5 +1,5 @@
 <?php
-require('../../voiceit-php-websdk/VoiceIt2WebBackend.php');
+require('../../voiceit-php-websdk/VoiceIt3WebBackend.php');
 include('../config.php');
 
 
@@ -8,7 +8,7 @@ $password = "".$_POST["password"];
 
 if($email == $DEMO_EMAIL && $password == $DEMO_PASSWORD){
   header("HTTP/1.1 200 OK");
-  $myVoiceIt = new VoiceIt2WebBackend($VOICEIT_API_KEY, $VOICEIT_API_TOKEN);
+  $myVoiceIt = new VoiceIt3WebBackend($VOICEIT_API_KEY, $VOICEIT_API_TOKEN);
   $createdToken = $myVoiceIt->generateTokenForUser($VOICEIT_TEST_USERID);
   $jsonResponse = Array(
     "responseCode" => "SUCC",

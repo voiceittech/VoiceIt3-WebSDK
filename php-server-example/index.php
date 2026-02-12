@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="css/semantic.min.css" />
   <link rel="stylesheet" type="text/css" href="css/example.css" />
   <link type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,700" rel="stylesheet">
-  <script src="js/voiceit2.min.js"></script>
+  <script src="js/voiceit3.min.js"></script>
   <script src="js/index.js"></script>
 </head>
 

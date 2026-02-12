@@ -1,5 +1,5 @@
 {
-  "name": "voiceit2-web-sdk",
+  "name": "voiceit3-web-sdk",
   "version": "1.6.0",
   "scripts": {
     "start": "node src/index.js",

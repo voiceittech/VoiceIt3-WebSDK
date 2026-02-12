@@ -1,6 +1,6 @@
 <?php
 session_start();
-require('../../voiceit-php-websdk/VoiceIt2WebBackend.php');
+require('../../voiceit-php-websdk/VoiceIt3WebBackend.php');
 include('../config.php');
 
 if (!function_exists('str_contains')) {
@@ -9,7 +9,7 @@ if (!function_exists('str_contains')) {
     }
 }
 
-$myVoiceIt = new VoiceIt2WebBackend($VOICEIT_API_KEY, $VOICEIT_API_TOKEN);
+$myVoiceIt = new VoiceIt3WebBackend($VOICEIT_API_KEY, $VOICEIT_API_TOKEN);
 $voiceItResultCallback = function($jsonObj){
   $callType = strtolower($jsonObj["callType"]);
   $userId = $jsonObj["userId"];

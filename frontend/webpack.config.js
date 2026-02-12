@@ -27,9 +27,9 @@ module.exports = {
   },
   output: {
     path: path.join(basePath, 'dist'),
-    filename: 'voiceit2.min.js',
+    filename: 'voiceit3.min.js',
     libraryTarget: 'umd',
-    library : 'VoiceIt2'
+    library : 'VoiceIt3'
   },
   resolve: {
         alias: {
