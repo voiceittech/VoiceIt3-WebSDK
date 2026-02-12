@@ -11,7 +11,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 
-	websdk "github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk"
+	websdk "github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk"
 )
 
 const (
