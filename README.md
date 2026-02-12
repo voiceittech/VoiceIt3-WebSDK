@@ -1,7 +1,7 @@
 <img src="./js.png" width="100%" style="width:100%" />
 
-# VoiceIt API 2 Web SDK [![travis](https://app.travis-ci.com/voiceittech/VoiceIt3-WebSDK.svg?branch=master)](https://app.travis-ci.com/github/voiceittech/VoiceIt3-WebSDK)
-The repository contains an example [web demonstration](#webexample) of VoiceIt's API 2.0 in the browser with a PHP or NodeJS backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
+# VoiceIt API 3 Web SDK [![travis](https://app.travis-ci.com/voiceittech/VoiceIt3-WebSDK.svg?branch=master)](https://app.travis-ci.com/github/voiceittech/VoiceIt3-WebSDK)
+The repository contains an example [web demonstration](#webexample) of VoiceIt's API 3.0 in the browser with a PHP or NodeJS backend. Please navigate to [Incorporating the SDK](#incorporating-the-sdk) for instructions on how to integrate the SDK into your own project(s).
 
 * [Prerequisites](#prerequisites)
 * [Recommended Platform](#recommended-platform)
@@ -68,7 +68,7 @@ The following show Voice Verification, Face Verification (With liveness detectio
 
 ### Getting Started
 
-Contact us at <a href="mailto:support@voiceit.io" target="_blank">support@voiceit.io</a> to get started with an account to use API 2.0.
+Contact us at <a href="mailto:support@voiceit.io" target="_blank">support@voiceit.io</a> to get started with an account to use API 3.0.
 
 <img src="./graphics/getcredentials.png" alt="API Key and Token" width="400px" />
 
