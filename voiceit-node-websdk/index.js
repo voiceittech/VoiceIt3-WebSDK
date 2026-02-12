@@ -38,7 +38,7 @@ function generateTokenForUser (options) {
   return token;
 }
 
-function VoiceIt2(apiKey, apiToken, options, api2CustomUrl) {
+function VoiceIt3(apiKey, apiToken, options, api2CustomUrl) {
 
   let api2BaseUrl = 'https://api.voiceit.io';
 
@@ -490,6 +490,6 @@ function VoiceIt2(apiKey, apiToken, options, api2CustomUrl) {
 }
 
 module.exports = {
-    Voiceit2: VoiceIt2,
+    Voiceit3: VoiceIt3,
     generateTokenForUser: generateTokenForUser,
 };
