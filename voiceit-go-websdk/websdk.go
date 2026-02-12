@@ -10,9 +10,9 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	voiceit2 "github.com/voiceittech/VoiceIt2-Go/v2"
-	"github.com/voiceittech/VoiceIt2-Go/v2/structs"
-	"github.com/voiceittech/VoiceIt2-WebSDK/voiceit-go-websdk/utils"
+	voiceit2 "github.com/voiceittech/VoiceIt3-Go/v2"
+	"github.com/voiceittech/VoiceIt3-Go/v2/structs"
+	"github.com/voiceittech/VoiceIt3-WebSDK/voiceit-go-websdk/utils"
 )
 
 const (
