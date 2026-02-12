@@ -21,13 +21,11 @@ const (
 )
 
 type BaseUrls struct {
-	API2           string
-	LivenessServer string
+	API2 string
 }
 
 type WebSDK struct {
 	vi                         voiceit2.VoiceIt2
-	livenessServerClient       LivenessServerClient
 	sessionExpirationTimeHours int
 }
 
@@ -39,27 +37,17 @@ func (websdk WebSDK) GetAPI2Client() voiceit2.VoiceIt2 {
 	return websdk.vi
 }
 
-func (websdk WebSDK) GetLivenessServerClient() LivenessServerClient {
-	return websdk.livenessServerClient
-}
-
 func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeHours int, baseUrls ...BaseUrls) {
 
-	var api2BaseUrl, livenessServerBaseUrl string
+	var api2BaseUrl string
 
 	if len(baseUrls) < 1 { // baseUrls optional parameter not passed
-		api2BaseUrl, livenessServerBaseUrl = "https://api.voiceit.io", "https://liveness.voiceit.io"
+		api2BaseUrl = "https://api.voiceit.io"
 	} else {
 		if baseUrls[0].API2 != "" {
 			api2BaseUrl = baseUrls[0].API2
 		} else {
 			api2BaseUrl = "https://api.voiceit.io"
-		}
-
-		if baseUrls[0].LivenessServer != "" {
-			livenessServerBaseUrl = baseUrls[0].LivenessServer
-		} else {
-			livenessServerBaseUrl = "https://liveness.voiceit.io"
 		}
 	}
 
@@ -67,12 +55,6 @@ func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeH
 		APIKey:   apiKey,
 		APIToken: apiToken,
 		BaseUrl:  api2BaseUrl,
-	}
-
-	websdk.livenessServerClient = LivenessServerClient{
-		APIKey:   apiKey,
-		APIToken: apiToken,
-		BaseUrl:  livenessServerBaseUrl,
 	}
 
 	websdk.sessionExpirationTimeHours = sessionExpirationTimeHours
@@ -183,8 +165,8 @@ func (websdk WebSDK) MakeCall(r *http.Request) (map[string]interface{}, error) {
 	var clientResponseBytes []byte
 	var err error
 
-	// Take file from multpart form request, copy to bytes.Buffer (Usable in client side requests to API 3/Liveness Server), without having to write to disk
-	if viRequestType == "createVoiceEnrollment" || viRequestType == "createFaceEnrollment" || viRequestType == "createVideoEnrollment" || viRequestType == "voiceVerification" || viRequestType == "faceVerification" || viRequestType == "faceVerificationWithLiveness" || viRequestType == "videoVerificationWithLiveness" || viRequestType == "videoVerification" {
+	// Take file from multpart form request, copy to bytes.Buffer, without having to write to disk
+	if viRequestType == "createVoiceEnrollment" || viRequestType == "createFaceEnrollment" || viRequestType == "createVideoEnrollment" || viRequestType == "voiceVerification" || viRequestType == "faceVerification" || viRequestType == "videoVerification" {
 
 		var key string
 		var extension string
@@ -193,7 +175,7 @@ func (websdk WebSDK) MakeCall(r *http.Request) (map[string]interface{}, error) {
 		case "createVoiceEnrollment", "voiceVerification":
 			key = "viVoiceData"
 			extension = ".wav"
-		case "createFaceEnrollment", "createVideoEnrollment", "faceVerification", "faceVerificationWithLiveness", "videoVerificationWithLiveness", "videoVerification":
+		case "createFaceEnrollment", "createVideoEnrollment", "faceVerification", "videoVerification":
 			key = "viVideoData"
 			extension = ".mp4"
 		}
@@ -224,7 +206,7 @@ func (websdk WebSDK) MakeCall(r *http.Request) (map[string]interface{}, error) {
 			filename = header.Filename + extension
 		}
 
-		// Make client request to API 3/Liveness Server
+		// Make client request to API 3
 	} else if viRequestType == "enoughVoiceEnrollments" || viRequestType == "enoughFaceEnrollments" || viRequestType == "enoughVideoEnrollments" {
 		return websdk.enoughEnrollments(res, viRequestType, userId)
 		// return
@@ -245,13 +227,6 @@ func (websdk WebSDK) MakeCall(r *http.Request) (map[string]interface{}, error) {
 		clientResponseBytes, err = websdk.vi.FaceVerificationByByteSlice(userId, filename, buf.Bytes(), false)
 	case "videoVerification":
 		clientResponseBytes, err = websdk.vi.VideoVerificationByByteSlice(userId, r.FormValue("viContentLanguage"), r.FormValue("viPhrase"), filename, buf.Bytes())
-	case "initialLiveness":
-		clientResponseBytes, err = websdk.livenessServerClient.GenerateLCORequest(userId, r.FormValue("viContentLanguage"))
-	case "faceVerificationWithLiveness":
-		// userId, lcoId, biometricType, filename string, fileData []byte, phrase ...string
-		clientResponseBytes, err = websdk.livenessServerClient.VideoProcessingRequest(userId, r.FormValue("viLCOId"), "face", filename, buf.Bytes())
-	case "videoVerificationWithLiveness":
-		clientResponseBytes, err = websdk.livenessServerClient.VideoProcessingRequest(userId, r.FormValue("viLCOId"), "video", filename, buf.Bytes(), r.FormValue("viPhrase"))
 	default:
 		res["responseCode"] = "IRT"
 		res["message"] = `Invalid request type "` + viRequestType + `"`
