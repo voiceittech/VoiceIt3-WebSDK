@@ -42,12 +42,12 @@ func (websdk *WebSDK) Initialize(apiKey, apiToken string, sessionExpirationTimeH
 	var api2BaseUrl string
 
 	if len(baseUrls) < 1 { // baseUrls optional parameter not passed
-		api2BaseUrl = "https://api.voiceit.io"
+		api2BaseUrl = "https://qpi.voiceit.io"
 	} else {
 		if baseUrls[0].API2 != "" {
 			api2BaseUrl = baseUrls[0].API2
 		} else {
-			api2BaseUrl = "https://api.voiceit.io"
+			api2BaseUrl = "https://qpi.voiceit.io"
 		}
 	}
 

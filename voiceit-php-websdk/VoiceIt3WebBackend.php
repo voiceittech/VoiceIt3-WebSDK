@@ -36,7 +36,7 @@ class VoiceIt3WebBackend {
   public $platformId = '48';
   public $notificationUrl = '';
 
-  function __construct($key, $token, $api2CustomUrl = 'https://api.voiceit.io') {
+  function __construct($key, $token, $api2CustomUrl = 'https://qpi.voiceit.io') {
      $this->apiKey = $key;
      $this->apiToken = $token;
      $this->api2BaseUrl = $api2CustomUrl;
