@@ -40,7 +40,7 @@ function generateTokenForUser (options) {
 
 function VoiceIt3(apiKey, apiToken, options, api2CustomUrl) {
 
-  let api2BaseUrl = 'https://qpi.voiceit.io';
+  let api2BaseUrl = 'https://api.voiceit.io';
 
   // Set default options
   if (typeof options === 'undefined') {
