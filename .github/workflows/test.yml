@@ -11,9 +11,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # No explicit token — default GITHUB_TOKEN is fine for checking out this
+      # public repo. The previous explicit 'token: ${{ secrets.GH_PAT }}' broke
+      # Dependabot PRs ("Input required and not supplied: token") because
+      # secrets.GH_PAT is an org-level Actions secret not available to
+      # Dependabot's restricted security context.
       - uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.GH_PAT }}
       - uses: actions/setup-node@v6
         with:
           node-version: '20'
@@ -21,17 +24,17 @@ jobs:
         with:
           go-version: '1.24'
           cache-dependency-path: voiceit3-go-server-example/go.sum
-      - name: Configure private repo access
-        run: git config --global url."https://x-access-token:${{ secrets.GH_PAT }}@github.com/".insteadOf "https://github.com/"
+      # No 'Configure private repo access' step — voiceit3-go-server-example's
+      # only voiceittech/* deps (voiceit3-go, voiceit3-web-sdk) are public, so
+      # no PAT is required for `go get`. If a private dep is ever added,
+      # restore the git-config rewrite + add GH_PAT to Dependabot secrets so
+      # PRs work too.
       - name: Build frontend
         run: |
           cd voiceit3-frontend
           npm install
           npm run build
       - name: Build Go server
-        env:
-          GOPRIVATE: github.com/voiceittech/*
-          GONOSUMCHECK: github.com/voiceittech/*
         run: |
           cd voiceit3-go-server-example
           go build ./...
