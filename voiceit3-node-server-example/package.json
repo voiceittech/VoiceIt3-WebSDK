@@ -9,9 +9,9 @@
   "author": "VoiceIt Technologies, LLC (C) 2020",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.5",
     "ejs": "^4.0.1",
-    "express": "^4.20.0",
+    "express": "^4.22.2",
     "express-session": "^1.15.6",
     "multer": "^2.1.1"
   },
