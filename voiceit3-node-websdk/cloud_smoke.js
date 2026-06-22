@@ -2,11 +2,11 @@
 // api.voiceit.io using the voiceit3-testingscripts video fixtures.
 // Env: VOICEIT_API_KEY, VOICEIT_API_TOKEN, TEST_DATA (dir with
 //      videoEnrollmentA1/2/3.mov + videoVerificationA1.mov).
-const VoiceIt = require('./index.js');
+const sdk = require('./index.js');
 const { VOICEIT_API_KEY: KEY, VOICEIT_API_TOKEN: TOK, TEST_DATA: TD } = process.env;
 if (!KEY || !TOK) { console.error('Missing VOICEIT_API_KEY/VOICEIT_API_TOKEN'); process.exit(1); }
 if (!TD) { console.error('Missing TEST_DATA'); process.exit(1); }
-const v = new VoiceIt(KEY, TOK);
+const v = new sdk.Voiceit3(KEY, TOK, {});
 const lang = 'en-US', phrase = 'Never forget tomorrow is a new day';
 const call = (fn, opts) => new Promise((resolve) => {
   const cb = (data) => resolve(typeof data === 'string' ? JSON.parse(data) : data);
