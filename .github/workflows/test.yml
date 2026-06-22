@@ -49,8 +49,8 @@ jobs:
       - name: Cloud smoke (node web-SDK backend vs api.voiceit.io)
         if: ${{ github.actor != 'dependabot[bot]' }}
         env:
-          VOICEIT_API_KEY: ${{ secrets.VIAPIKEY }}
-          VOICEIT_API_TOKEN: ${{ secrets.VIAPITOKEN }}
+          VOICEIT_API_KEY: ${{ secrets.VOICEIT_API_KEY }}
+          VOICEIT_API_TOKEN: ${{ secrets.VOICEIT_API_TOKEN }}
           TEST_DATA: ${{ github.workspace }}/_testingscripts/api-test/test-data
         run: |
           cd voiceit3-node-websdk
