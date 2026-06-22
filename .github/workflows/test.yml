@@ -1,4 +1,4 @@
-name: Build
+name: API Test
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 on:
@@ -11,11 +11,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # No explicit token — default GITHUB_TOKEN is fine for checking out this
-      # public repo. The previous explicit 'token: ${{ secrets.GH_PAT }}' broke
-      # Dependabot PRs ("Input required and not supplied: token") because
-      # secrets.GH_PAT is an org-level Actions secret not available to
-      # Dependabot's restricted security context.
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
@@ -24,11 +19,6 @@ jobs:
         with:
           go-version: '1.24'
           cache-dependency-path: voiceit3-go-server-example/go.sum
-      # No 'Configure private repo access' step — voiceit3-go-server-example's
-      # only voiceittech/* deps (voiceit3-go, voiceit3-web-sdk) are public, so
-      # no PAT is required for `go get`. If a private dep is ever added,
-      # restore the git-config rewrite + add GH_PAT to Dependabot secrets so
-      # PRs work too.
       - name: Build frontend
         run: |
           cd voiceit3-frontend
@@ -43,3 +33,26 @@ jobs:
           cd voiceit3-node-server-example
           npm install
           node --check server.js
+      # Real cloud smoke: drive the Node web-SDK backend through a full
+      # create -> 3x video enroll -> video verify -> delete cycle against
+      # api.voiceit.io, using the voiceit3-testingscripts video fixtures.
+      # Skipped for Dependabot (no access to GH_PAT / org secrets).
+      - name: Fetch test media (voiceit3-testingscripts)
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        uses: actions/checkout@v6
+        with:
+          repository: voiceittech/voiceit3-testingscripts
+          token: ${{ secrets.GH_PAT }}
+          path: _testingscripts
+          sparse-checkout: api-test/test-data
+          sparse-checkout-cone-mode: false
+      - name: Cloud smoke (node web-SDK backend vs api.voiceit.io)
+        if: ${{ github.actor != 'dependabot[bot]' }}
+        env:
+          VOICEIT_API_KEY: ${{ secrets.VIAPIKEY }}
+          VOICEIT_API_TOKEN: ${{ secrets.VIAPITOKEN }}
+          TEST_DATA: ${{ github.workspace }}/_testingscripts/api-test/test-data
+        run: |
+          cd voiceit3-node-websdk
+          npm install
+          node cloud_smoke.js
