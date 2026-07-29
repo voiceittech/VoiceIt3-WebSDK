@@ -31,7 +31,7 @@
 }
 
 .ic:hover {
-  color: #FCBB1B;
+  color: #FCBC3D;
 }
 
 .dropdown, .compact.menu {
@@ -227,3 +227,78 @@
 .arrowButton{
   cursor: pointer;
 }
+
+/* ===========================================================================
+   Demo-aligned LIGHT theme (voiceit.io/demo): white card, VoiceIt gold #FCBC3D
+   accents, EnQuanta "branding" webfont, rounded video preview + gold step dots.
+   Fonts are inlined by webpack (asset/inline rule) as data URIs.
+   =========================================================================== */
+@font-face {
+  font-family: 'branding';
+  src: url('./fonts/branding-bold-webfont.woff2') format('woff2'),
+       url('./fonts/branding-bold-webfont.woff') format('woff');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'branding';
+  src: url('./fonts/branding-medium-webfont.woff2') format('woff2');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'branding';
+  src: url('./fonts/branding-blackitalic-webfont.woff2') format('woff2');
+  font-weight: 700; font-style: italic; font-display: swap;
+}
+
+.ui.modal, .ui.modal .ui.card, .ui.modal .content, .ui.modal .extra.content,
+.ui.modal .header, .ui.modal .button, .ui.modal p, .ui.modal span, .ui.modal a {
+  font-family: 'branding', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+  letter-spacing: 0.1px;
+}
+
+/* White, rounded, softly-shadowed card */
+.ui.modal .ui.card {
+  border-radius: 20px !important;
+  overflow: hidden;
+  background: #FFFFFF !important;
+  color: #0A0A0A !important;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18) !important;
+}
+.ui.modal .image { background: #FFFFFF !important; }
+.ui.modal .content { background: #FFFFFF !important; color: #0A0A0A !important; }
+.ui.modal .extra.content { background: #FFFFFF !important; }
+
+/* Rounded camera preview (matches the demo's rounded video) */
+#videoLiveness, .viCanvas, .viImageCanvas {
+  border-radius: 16px !important;
+  overflow: hidden;
+}
+
+/* Prompt: bold label; the quoted phrase renders italic (branding blackitalic) */
+.viReenrollMessage, .ui.modal .header { font-weight: 700 !important; color: #0A0A0A !important; }
+
+/* Control icons (close, nav arrows) dark on white, gold on hover */
+.ui.modal .ic { color: #0A0A0A !important; }
+.ui.modal .ic:hover, .arrowButton:hover { color: #FCBC3D !important; }
+
+/* Primary record/ready button: gold pill, matches the demo CTA */
+.viReadyButton {
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  border: none !important;
+  color: #0A0A0A !important;
+  background: #FCBC3D !important;
+  padding: 12px 30px !important;
+  transition: transform .12s ease, box-shadow .12s ease !important;
+}
+.viReadyButton:hover { box-shadow: 0 6px 18px rgba(252,188,61,0.45) !important; transform: translateY(-1px); }
+.viReadyButton:focus { box-shadow: 0 0 0 3px rgba(252,188,61,0.35) !important; }
+
+/* Step dots (1·2·3) under the video — gold active, gray inactive */
+.viStepDots { display:none; gap:10px; justify-content:flex-start; padding:14px 4px 6px; }
+.viStepDot {
+  width:30px; height:30px; border-radius:999px; display:flex; align-items:center; justify-content:center;
+  font-family:'branding',system-ui,sans-serif; font-weight:700; font-size:13px;
+  background:#ECEDEF; color:#8A8F96;
+}
+.viStepDot.active { background:#FCBC3D; color:#FFFFFF; }

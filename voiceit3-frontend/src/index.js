@@ -254,6 +254,12 @@ voiceIt3ObjRef.initModalClickListeners = function(){
     voiceIt3ObjRef.player = undefined;
     voiceIt3ObjRef.destroyed = false;
     voiceIt3ObjRef.modal.build();
+    if (voiceIt3ObjRef.type.action === 'Enrollment') {
+      voiceIt3ObjRef.modal.showStepDots();
+      voiceIt3ObjRef.modal.setStepDot(0);
+    } else {
+      voiceIt3ObjRef.modal.hideStepDots();
+    }
     voiceIt3ObjRef.setup();
     vi$.clickOn(voiceIt3ObjRef.modal.domRef.closeButton, function(){
         destroyAndHideModal();
@@ -538,6 +544,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
     if (response.responseCode === 'SUCC') {
       if (voiceIt3ObjRef.enrollCounter < 3) {
         voiceIt3ObjRef.enrollCounter++;
+        voiceIt3ObjRef.modal.setStepDot(Math.min(voiceIt3ObjRef.enrollCounter, 2));
         voiceIt3ObjRef.continueEnrollment(response);
       }
     } else {

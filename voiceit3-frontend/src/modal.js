@@ -53,7 +53,7 @@ export default function Modal(mRef, language) {
       'styles': {
         'top': '1rem',
         'right': '1rem',
-        'color': '#FFFFFF',
+        'color': '#0A0A0A',
         'fontSize': '25px'
       },
       'nodeName': 'i',
@@ -82,7 +82,7 @@ export default function Modal(mRef, language) {
         'zIndex': '6',
         'position': 'relative',
         'padding': '0px',
-        'backgroundColor': 'black',
+        'backgroundColor': '#FFFFFF',
         'textAlign': 'center'
       },
       'attributes': {
@@ -93,7 +93,7 @@ export default function Modal(mRef, language) {
       'parent': 'viCard'
     }, {
       'styles':{
-        'backgroundColor': '#000000'
+        'backgroundColor': '#FFFFFF'
       },
       'attributes': {
         'class': 'extra content'
@@ -118,7 +118,7 @@ export default function Modal(mRef, language) {
         'height': '345px',
         'position': 'absolute',
         'zIndex': '26',
-        'background': 'black',
+        'background': '#FFFFFF',
         'textAlign': 'center',
         'alignItems': 'center',
         'justifyContent': 'center',
@@ -135,7 +135,7 @@ export default function Modal(mRef, language) {
         'height': '345px',
         'position': 'absolute',
         'zIndex': '26',
-        'background': 'black',
+        'background': '#FFFFFF',
         'textAlign': 'center',
         'alignItems': 'center',
         'justifyContent': 'center',
@@ -165,6 +165,18 @@ export default function Modal(mRef, language) {
       'nodeName': 'video',
       'parent': 'cardOverlay',
       'type' : 'video/webm',
+    }, {
+      'attributes': { 'class': 'viStepDots' },
+      'nodeName': 'div', 'elName': 'stepDots', 'parent': 'content'
+    }, {
+      'attributes': { 'class': 'viStepDot active' },
+      'nodeName': 'div', 'elName': 'stepDot0', 'parent': 'stepDots', 'text': '1'
+    }, {
+      'attributes': { 'class': 'viStepDot' },
+      'nodeName': 'div', 'elName': 'stepDot1', 'parent': 'stepDots', 'text': '2'
+    }, {
+      'attributes': { 'class': 'viStepDot' },
+      'nodeName': 'div', 'elName': 'stepDot2', 'parent': 'stepDots', 'text': '3'
     }, {
       'styles':{
         'color': '#2ECC71',
@@ -272,7 +284,7 @@ export default function Modal(mRef, language) {
       'styles':{
         'fontStyle': 'normal',
         'maxWidth': '300px',
-        'color': '#FFFFFF'
+        'color': '#0A0A0A'
       },
       'elName':'viMessage',
       'nodeName': 'span',
@@ -596,6 +608,20 @@ export default function Modal(mRef, language) {
     VoiceItModalRef.domRef.viMessage.innerHTML = textToSet;
     VoiceItModalRef.domRef.viMessage.style.opacity = 1.0;
     VoiceItModalRef.domRef.viMessage.style.display = 'inline-block';
+  }
+
+  // Step dots (1·2·3) under the video — mirrors the voiceit.io/demo enroll UI.
+  VoiceItModalRef.showStepDots = function(){
+    if(VoiceItModalRef.domRef.stepDots){ VoiceItModalRef.domRef.stepDots.style.display = 'flex'; }
+  }
+  VoiceItModalRef.hideStepDots = function(){
+    if(VoiceItModalRef.domRef.stepDots){ VoiceItModalRef.domRef.stepDots.style.display = 'none'; }
+  }
+  VoiceItModalRef.setStepDot = function(activeIndex){
+    for(var i=0;i<3;i++){
+      var d = VoiceItModalRef.domRef['stepDot'+i];
+      if(d){ d.className = 'viStepDot' + (i === activeIndex ? ' active' : ''); }
+    }
   }
 
   VoiceItModalRef.showWaitingLoader = function(down) {
