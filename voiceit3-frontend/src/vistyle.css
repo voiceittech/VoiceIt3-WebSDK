@@ -280,6 +280,12 @@
   object-fit: cover !important;
 }
 .viModal .video-js { background-color: #FFFFFF !important; }
+/* Hide the legacy circular gold progress ring — the demo has no ring */
+.viProgressCircle { display: none !important; }
+/* Keep the camera preview a clean rounded rectangle that fills its box */
+.viModal .image, .viModal #videoRecord, .viModal .vjs-record {
+  background: #FFFFFF !important; border-radius: 16px !important; overflow: hidden !important;
+}
 
 /* Prompt: bold label; the quoted phrase renders italic (branding blackitalic) */
 .viReenrollMessage, .ui.modal .header { font-weight: 700 !important; color: #0A0A0A !important; }

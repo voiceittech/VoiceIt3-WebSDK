@@ -704,9 +704,16 @@ export default function Modal(mRef, language) {
 
   // Creates the circular audio waveform around video (verification/enrollment)
   VoiceItModalRef.createVideoCircle = function() {
+    // Demo-match: show the camera as a clean rounded RECTANGLE (like
+    // voiceit.io/demo) instead of the legacy circular crop + audio-reactive
+    // sound circle. The video-js preview fills the frame via object-fit:cover
+    // (vistyle.css); recording itself is unaffected (validated by the CI cloud
+    // enroll/verify smoke).
     if(VoiceItModalRef.domRef.videoCircle){
       vi$.remove(VoiceItModalRef.domRef.videoCircle);
     }
+    return;
+    // eslint-disable-next-line no-unreachable
     var videoCircleRadius = 130;
     var svgNS = 'http://www.w3.org/2000/svg';
     VoiceItModalRef.domRef.videoCircle = document.createElementNS(svgNS, 'svg');
