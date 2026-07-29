@@ -354,3 +354,32 @@
   font-family:'branding', system-ui, sans-serif; padding:14px 20px 18px;
   color:#505050; font-size:14px; font-weight:500; line-height:1.45;
 }
+
+/* ============ FORCE a clean camera preview: no black, no circle ============
+   videojs paints .video-js #000 and legacy code masked the video into a circle.
+   Kill both so the camera fills a clean rounded rectangle like voiceit.io/demo. */
+.viModal .video-js,
+.viModal .video-js *,
+.viModal .vjs-tech,
+.viModal .image,
+.viModal .image > div {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+.viModal video,
+.viModal .video-js video,
+.viModal .vjs-tech {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 16px !important;
+  background: transparent !important;
+}
+.viModal .image {
+  background: #FFFFFF !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+/* Remove any legacy circular mask/ring SVG overlay in the camera area */
+.viModal .image svg { display: none !important; }
+.viProgressCircle, .viVideoCircle { display: none !important; }
