@@ -605,6 +605,7 @@ export default function Modal(mRef, language) {
 
   VoiceItModalRef.displayMessage = function(textToSet){
     if(!VoiceItModalRef.domRef.viMessage){ return; }
+    VoiceItModalRef.domRef.viMessage.style.color = '#0A0A0A'; // reset to default dark
     VoiceItModalRef.domRef.viMessage.innerHTML = textToSet;
     VoiceItModalRef.domRef.viMessage.style.opacity = 1.0;
     VoiceItModalRef.domRef.viMessage.style.display = 'inline-block';
@@ -622,6 +623,19 @@ export default function Modal(mRef, language) {
       var d = VoiceItModalRef.domRef['stepDot'+i];
       if(d){ d.className = 'viStepDot' + (i === activeIndex ? ' active' : ''); }
     }
+  }
+
+  // Colored result message — green "Verified" / red "Not Matched", like the
+  // voiceit.io/demo result cards.
+  VoiceItModalRef.displayResult = function(textToSet, isSuccess){
+    if(!VoiceItModalRef.domRef.viMessage){ return; }
+    VoiceItModalRef.hideStepDots();
+    var color = isSuccess ? '#75B09C' : '#FF4842';
+    var mark = isSuccess ? '✓ ' : '✕ ';
+    VoiceItModalRef.domRef.viMessage.style.color = color;
+    VoiceItModalRef.domRef.viMessage.innerHTML = mark + textToSet;
+    VoiceItModalRef.domRef.viMessage.style.opacity = 1.0;
+    VoiceItModalRef.domRef.viMessage.style.display = 'inline-block';
   }
 
   VoiceItModalRef.showWaitingLoader = function(down) {

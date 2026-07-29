@@ -290,12 +290,12 @@ voiceIt3ObjRef.initModalClickListeners = function(){
       // voiceIt3ObjRef.waitj.fadeTo(300, 0.0, function() {
     if (response.responseCode === 'SUCC') {
       if (voiceIt3ObjRef.type.action === 'Verification') {
-        voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('SUCC_VERIFICATION'));
+        voiceIt3ObjRef.modal.displayResult(voiceIt3ObjRef.prompts.getPrompt('SUCC_VERIFICATION'), true);
       } else {
-        voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('SUCC_ENROLLMENT'));
+        voiceIt3ObjRef.modal.displayResult(voiceIt3ObjRef.prompts.getPrompt('SUCC_ENROLLMENT'), true);
       }
     } else {
-      voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt(response.responseCode));
+      voiceIt3ObjRef.modal.displayResult(voiceIt3ObjRef.prompts.getPrompt(response.responseCode), false);
     }
   };
 
