@@ -11,7 +11,8 @@
   },
   "scripts": {
     "start": "node src/index.js",
-    "build": "./node_modules/webpack/bin/webpack.js"
+    "build": "./node_modules/webpack/bin/webpack.js",
+    "test:modal": "node test/modal-smoke.mjs"
   },
   "description": "voiceit3-webSDK - Browser SDK for VoiceIt API 3.0 Face and Voice Verification",
   "main": "index.js",
@@ -29,6 +30,7 @@
     "webpack": "^5.104.1"
   },
   "devDependencies": {
+    "playwright": "^1.55.0",
     "webpack-cli": "^4.7.2"
   }
 }

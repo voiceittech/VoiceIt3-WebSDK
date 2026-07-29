@@ -24,6 +24,15 @@ jobs:
           cd voiceit3-frontend
           npm install
           npm run build
+      - name: Modal build smoke test (headless Chromium, fake camera)
+        # Regression guard for v3.0.15: an orphaned modal-blueprint element made
+        # buildModal throw on appendChild, so the record button was never built
+        # and video enroll/verify silently hung. This drives encapsulatedVideoEnrollment
+        # in real Chromium and asserts the record button renders with no appendChild crash.
+        run: |
+          cd voiceit3-frontend
+          npx playwright install --with-deps chromium
+          npm run test:modal
       - name: Build Go server
         run: |
           cd voiceit3-go-server-example
