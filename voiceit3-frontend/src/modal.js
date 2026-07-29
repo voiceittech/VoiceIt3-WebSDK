@@ -231,7 +231,7 @@ export default function Modal(mRef, language) {
         'minHeight': '345px',
         'width': '100%',
         'zIndex': '1',
-        'background': 'rgba(0,0,0,0.5)'
+        'background': 'rgba(0,0,0,0)'
       },
       'nodeName': 'div',
       'elName':'outerOverlay',
@@ -625,15 +625,26 @@ export default function Modal(mRef, language) {
     }
   }
 
-  // Colored result message — green "Verified" / red "Not Matched", like the
-  // voiceit.io/demo result cards.
-  VoiceItModalRef.displayResult = function(textToSet, isSuccess){
+  // Result CARD — icon + label in a tinted header over a message body, boxed
+  // and rounded, matching the voiceit.io/demo RESULT_CONFIG (Verified = green
+  // #75B09C check-circle, Not Matched = red #FF4842 x-circle).
+  VoiceItModalRef.displayResult = function(textToSet, isSuccess, label){
     if(!VoiceItModalRef.domRef.viMessage){ return; }
     VoiceItModalRef.hideStepDots();
     var color = isSuccess ? '#75B09C' : '#FF4842';
-    var mark = isSuccess ? '✓ ' : '✕ ';
-    VoiceItModalRef.domRef.viMessage.style.color = color;
-    VoiceItModalRef.domRef.viMessage.innerHTML = mark + textToSet;
+    var tint  = isSuccess ? 'rgba(117,176,156,0.10)' : 'rgba(255,72,66,0.10)';
+    var icon = isSuccess
+      ? '<svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm-1.1 14.3l-4-4 1.4-1.4 2.6 2.6 5.7-5.7 1.4 1.4-7.1 7.1z"/></svg>'
+      : '<svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zm3.5 12.1l-1.4 1.4L12 13.4l-2.1 2.1-1.4-1.4L10.6 12 8.5 9.9l1.4-1.4L12 10.6l2.1-2.1 1.4 1.4L13.4 12z"/></svg>';
+    VoiceItModalRef.domRef.viMessage.style.color = '';
+    VoiceItModalRef.domRef.viMessage.innerHTML =
+      '<div class="viResultCard">' +
+        '<div class="viResultHeader" style="background:' + tint + '">' +
+          '<span class="viResultIcon" style="color:' + color + '">' + icon + '</span>' +
+          '<span class="viResultLabel" style="color:' + color + '">' + (label || (isSuccess ? 'Verified' : 'Not Matched')) + '</span>' +
+        '</div>' +
+        '<div class="viResultBody">' + textToSet + '</div>' +
+      '</div>';
     VoiceItModalRef.domRef.viMessage.style.opacity = 1.0;
     VoiceItModalRef.domRef.viMessage.style.display = 'inline-block';
   }
