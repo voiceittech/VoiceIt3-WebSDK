@@ -319,6 +319,9 @@
 /* Drop the "Powered by VoiceIt" footer (the demo has none) */
 .viModal .extra.content, #powered-by, #verify, #powered-by-container { display:none !important; }
 
+/* No reenroll-confirm arrows (< >) — enrollment auto-proceeds like the demo */
+.viModal .arrowButton { display:none !important; }
+
 /* Tighten spacing: less top padding + dots sit closer under the video.
    The stray #videoLiveness <video> sits below the main preview and added ~150px
    of dead space — take it out of flow so the dots/prompt hug the video. */

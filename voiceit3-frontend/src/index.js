@@ -208,6 +208,18 @@ voiceIt3ObjRef.StopRecording = function() {
   }
 };
 
+// Auto-begin recording — replaces the "Click to begin" button so the flow runs
+// straight through the 1-2-3 clips like the voiceit.io/demo (no manual start).
+voiceIt3ObjRef.autoBegin = function() {
+  if (voiceIt3ObjRef.modal.domRef.readyButton) {
+    vi$.remove(voiceIt3ObjRef.modal.domRef.readyButton);
+  }
+  voiceIt3ObjRef.startView();
+  if (voiceIt3ObjRef.type.biometricType !== 'voice') {
+    voiceIt3ObjRef.modal.revealProgressCircle(500);
+  }
+};
+
 function destroyAndHideModal(){
   vi$.fadeOut(voiceIt3ObjRef.modal.domRef.modalDimBackground, 1100, function(){
         voiceIt3ObjRef.destroy();
@@ -275,8 +287,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
         } else {
           vi$.fadeIn(voiceIt3ObjRef.modal.domRef.imageCanvas, 500);
         }
-        voiceIt3ObjRef.modal.domRef.readyButton.style.display = 'inline-block';
-        vi$.fadeIn(voiceIt3ObjRef.modal.domRef.readyButton, 500);
+        voiceIt3ObjRef.autoBegin();
       });
     } else {
       //show an erroe message
@@ -601,12 +612,16 @@ voiceIt3ObjRef.initModalClickListeners = function(){
     });
 
     voiceIt3ObjRef.player.on('deviceReady', function() {
-      //setup listners here
-      if (voiceIt3ObjRef.type.action === 'Enrollment') {
-        voiceIt3ObjRef.modal.showEnrollmentDeletionWarningOverlay();
-      }
       voiceIt3ObjRef.initModalClickListeners();
-      voiceIt3ObjRef.modal.domRef.readyButton.style.display = 'inline-block';
+      voiceIt3ObjRef.modal.domRef.readyButton.style.display = 'none';
+      if (voiceIt3ObjRef.type.action === 'Enrollment') {
+        // Auto-proceed: no reenroll confirm (< >) — clear existing enrollments,
+        // then begin recording the 1-2-3 clips automatically, like the demo.
+        voiceIt3ObjRef.modal.showWaitingLoader();
+        voiceIt3ObjRef.apiRef.deleteAllEnrollments(voiceIt3ObjRef.handleDeletion);
+      } else {
+        voiceIt3ObjRef.autoBegin();
+      }
     });
 
     voiceIt3ObjRef.player.on('startRecord', function() {

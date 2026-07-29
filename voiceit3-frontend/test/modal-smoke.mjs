@@ -74,8 +74,10 @@ try {
   await page.goto(base, { waitUntil: 'load', timeout: 30000 });
   await page.evaluate(() => window.startEnroll());
 
+  // The record button is built by buildModal (the regression target). The demo
+  // auto-flow hides it (display:none), so assert it was BUILT/attached, not visible.
   let built = false;
-  try { await page.waitForSelector('.viReadyButton', { timeout: 15000 }); built = true; } catch { built = false; }
+  try { await page.waitForSelector('.viReadyButton', { state: 'attached', timeout: 15000 }); built = true; } catch { built = false; }
 
   const appendChildCrash = pageErrors.some((m) => /reading 'appendChild'|appendChild/.test(m));
 
