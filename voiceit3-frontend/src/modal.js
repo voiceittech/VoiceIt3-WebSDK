@@ -206,37 +206,13 @@ export default function Modal(mRef, language) {
       'nodeName': 'div',
       'elName': 'iconHolder',
       'parent': 'warningOverlay'
-    },{
-      'styles':{
-        'marginBottom': '7%',
-        'fontWeight': 'normal',
-        'maxWidth': '80%',
-        'color': 'white',
-        'fontStyle': 'normal'
-      },
-      'nodeName': 'h4',
     },
-    // {
-    //   'styles':{
-    //     'width': '70%'
-    //   },
-    //   'attributes': {
-    //   },
-    //   'nodeName': 'img',
-    // },
+    // Removed: an orphaned <h4> and a dead "Skip"/"Omitir" <a> button (leftovers
+    // from the removed liveness UI). Neither declared a 'parent', so buildModal's
+    // parent.appendChild(ele) threw "Cannot read properties of undefined
+    // (reading 'appendChild')", aborting the whole modal build (record button
+    // never created, modal never shown). See the parent guard in buildModal.
     {
-      'styles':{
-        'color': '#000000',
-        'position': 'absolute',
-        'bottom': '0px'
-      },
-      'attributes': {
-        'class': 'ui basic label'
-      },
-      'elName': 'skipButton',
-      'nodeName': 'a',
-      'text': language === 'es-ES' ? 'Omitir' : 'Skip'
-    }, {
       'styles':{
         'display': 'flex',
         'position': 'absolute',
@@ -341,6 +317,7 @@ export default function Modal(mRef, language) {
         ele = document.createElementNS(svgns, modalPart.nodeName);
         var parent = vi$.qs(modalPart.parent);
         if(!parent){ parent = VoiceItModalRef.domRef[modalPart.parent]; }
+        if(!parent){ console.warn('VoiceIt modal: skipping "' + modalPart.nodeName + '" — parent "' + modalPart.parent + '" not found'); return; }
         parent.appendChild(ele);
       }
       //if not svg element
@@ -356,6 +333,7 @@ export default function Modal(mRef, language) {
         if(parent == undefined){
           parent = VoiceItModalRef.domRef[modalPart.parent];
         }
+        if(parent == undefined){ console.warn('VoiceIt modal: skipping "' + modalPart.nodeName + '" — parent "' + modalPart.parent + '" not found'); return; }
         //append element as last child to parent
         parent.appendChild(ele);
         if (modalPart.text) {
@@ -601,12 +579,6 @@ export default function Modal(mRef, language) {
     }
   }
 
-
-  // TODO: Refactor this to a createOverlay method
-  // VoiceItModalRef.revealLivenessOverlay = function(){
-  //   VoiceItModalRef.domRef.content.style.display = 'none';
-  //   })
-  // }
 
   VoiceItModalRef.revealWarningOverlay = function(duration, after){
     if(!VoiceItModalRef.domRef.warningOverlay){ return; }

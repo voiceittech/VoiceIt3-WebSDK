@@ -2,7 +2,6 @@ import ProgressBar from 'progressbar.js';
 import Colors from './colors';
 
 const vi$ = {
-  LCOs: ['FACE_NEUTRAL', 'FACE_LEFT', 'FACE_RIGHT', 'FACE_DOWN', 'FACE_UP', 'FACE_TILT_LEFT', 'FACE_TILT_RIGHT', 'SMILE'],
   post: function(modal, endPoint, requestType, token, props, callback) {
       var http = new XMLHttpRequest();
       var formData = new FormData();
