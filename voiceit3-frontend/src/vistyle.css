@@ -316,6 +316,25 @@
 }
 .viStepDot.active { background:#FCBC3D; color:#FFFFFF; }
 
+/* Drop the "Powered by VoiceIt" footer (the demo has none) */
+.viModal .extra.content, #powered-by, #verify, #powered-by-container { display:none !important; }
+
+/* Tighten spacing: less top padding + dots sit closer under the video.
+   The stray #videoLiveness <video> sits below the main preview and added ~150px
+   of dead space — take it out of flow so the dots/prompt hug the video. */
+.viModal .ui.card { padding-top:0 !important; }
+.viStepDots { padding:10px 4px 4px !important; }
+#videoLiveness { position:absolute !important; top:0; left:0; z-index:-1; }
+
+/* Center the modal on the viewport (Semantic's default left-offset drifts it right) */
+.ui.dimmer.modals, .ui.active.dimmer.modals.transition {
+  display:flex !important; align-items:center !important; justify-content:center !important;
+}
+.viModal.ui.modal {
+  position:relative !important; left:auto !important; right:auto !important;
+  top:auto !important; margin:0 auto !important; transform:none !important;
+}
+
 /* Result card (icon + label header + message body) — matches the demo cards */
 .viResultCard {
   width:300px; max-width:90%; margin:8px auto;
