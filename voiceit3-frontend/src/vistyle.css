@@ -268,11 +268,18 @@
 .ui.modal .content { background: #FFFFFF !important; color: #0A0A0A !important; }
 .ui.modal .extra.content { background: #FFFFFF !important; }
 
-/* Rounded camera preview (matches the demo's rounded video) */
-#videoLiveness, .viCanvas, .viImageCanvas {
+/* Rounded, cover-filled camera preview — kills the black videojs letterbox so
+   the camera fills a clean rounded rectangle like the demo. */
+#videoLiveness, .viCanvas, .viImageCanvas,
+.viModal video, .viModal .video-js, .viModal .video-js video, .viModal .vjs-tech, #myAudio {
   border-radius: 16px !important;
   overflow: hidden;
+  background-color: transparent !important;
 }
+.viModal video, .viModal .video-js video, .viModal .vjs-tech, #videoLiveness {
+  object-fit: cover !important;
+}
+.viModal .video-js { background-color: #FFFFFF !important; }
 
 /* Prompt: bold label; the quoted phrase renders italic (branding blackitalic) */
 .viReenrollMessage, .ui.modal .header { font-weight: 700 !important; color: #0A0A0A !important; }
