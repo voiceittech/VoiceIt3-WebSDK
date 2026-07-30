@@ -551,6 +551,17 @@ voiceIt3ObjRef.initModalClickListeners = function(){
 
   voiceIt3ObjRef.handleEnrollmentResponse = function(response){
     voiceIt3ObjRef.modal.removeWaitingLoader();
+    // Guard against an unrecognized response envelope: if the backend proxy
+    // returns something without a top-level responseCode, DON'T silently
+    // re-record forever — log it and surface a clear error so the failure is
+    // visible instead of an invisible loop.
+    if (!response || typeof response.responseCode === 'undefined') {
+      console.error('VoiceIt: enrollment response missing responseCode (raw):', response);
+      voiceIt3ObjRef.modal.displayMessage('Enrollment failed: unexpected server response. Please try again.');
+      voiceIt3ObjRef.completionCallback(false, response);
+      voiceIt3ObjRef.exitOut(false, response);
+      return;
+    }
     // Handle enrollment success;
     if (response.responseCode === 'SUCC') {
       if (voiceIt3ObjRef.enrollCounter < 3) {
@@ -559,6 +570,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
         voiceIt3ObjRef.continueEnrollment(response);
       }
     } else {
+      console.warn('VoiceIt: enrollment attempt returned', response.responseCode, response.message || '');
       voiceIt3ObjRef.attempts++;
       if (voiceIt3ObjRef.attempts > MAX_ATTEMPTS) {
         voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('MAX_ATTEMPTS'));

@@ -307,8 +307,8 @@
 .viReadyButton:hover { box-shadow: 0 6px 18px rgba(252,188,61,0.45) !important; transform: translateY(-1px); }
 .viReadyButton:focus { box-shadow: 0 0 0 3px rgba(252,188,61,0.35) !important; }
 
-/* Step dots (1·2·3) under the video — gold active, gray inactive */
-.viStepDots { display:none; gap:10px; justify-content:flex-start; padding:14px 4px 6px; }
+/* Step dots (1·2·3) under the video — gold active, gray inactive; CENTERED */
+.viStepDots { display:none; gap:12px; justify-content:center; padding:14px 4px 6px; }
 .viStepDot {
   width:30px; height:30px; border-radius:999px; display:flex; align-items:center; justify-content:center;
   font-family:'branding',system-ui,sans-serif; font-weight:700; font-size:13px;
@@ -325,7 +325,6 @@
 /* Tighten spacing: less top padding + dots sit closer under the video.
    The stray #videoLiveness <video> sits below the main preview and added ~150px
    of dead space — take it out of flow so the dots/prompt hug the video. */
-.viModal .ui.card { padding-top:0 !important; }
 .viStepDots { padding:10px 4px 4px !important; }
 #videoLiveness { position:absolute !important; top:0; left:0; z-index:-1; }
 
@@ -391,3 +390,50 @@
   background: transparent !important;
   background-color: transparent !important;
 }
+
+/* ============ issue1/issue2 fixes: white frame, no X, centered dots ============ */
+/* Remove the black close (X) — the flow auto-completes; the demo has no X. */
+.viModal .close.icon, .viModal > .close, .ui.modal > .close { display: none !important; }
+
+/* Equal white padding framing the camera on top/left/right (uniform white space). */
+.viModal .ui.card {
+  padding: 16px !important;
+  background: #FFFFFF !important;
+  border-radius: 20px !important;
+  box-sizing: border-box !important;
+}
+
+/* Camera holder fills the padded width, rounded + clipped so overlays stay inside. */
+.viModal .image, .viModal > .ui.card > .image { padding: 0 !important; width: 100% !important; }
+.viModal .overlayHolder,
+.viModal .ui.card > .image > div[style*="min-height"] {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  width: 100% !important;
+}
+
+/* All camera media fills the rounded holder (no overflow past the white frame). */
+.viModal #videoLiveness,
+.viModal video, .viModal .video-js, .viModal .vjs-tech,
+.viModal .viCanvas, .viModal .viImageCanvas {
+  width: 100% !important;
+  height: 100% !important;
+  left: 0 !important;
+  top: 0 !important;
+  object-fit: cover !important;
+  border-radius: 16px !important;
+  max-width: 100% !important;
+}
+
+/* Feedback / directions area: centered text with real breathing room, and the
+   step dots sit centered with clear space under the camera. */
+.viModal .content {
+  padding: 6px 22px 20px !important;
+  text-align: center !important;
+}
+.viStepDots {
+  justify-content: center !important;
+  gap: 12px !important;
+  padding: 20px 0 10px !important;
+}
+#viMessage, .viMessage { display: inline-block !important; line-height: 1.5 !important; }
