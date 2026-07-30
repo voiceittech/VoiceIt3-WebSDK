@@ -23,6 +23,7 @@ export default function Prompts(language) {
           VOICE_READY:"La verificación de voz está lista.",
           VOICE_READY_SUBTITLE:"Ahora puedes usar tu voz en lugar de una contraseña para iniciar sesión de forma segura.",
           LOOK_INTO_CAM:"Por favor, mira a la cámara",
+          GET_READY:"Prepárate...",
           GET_ENROLLED:"Ok, vamos a enrolarte",
           GET_VERIFIED:"Ok, vamos a verificarte",
           READY_FOR_VOICE_VERIFICATION: "Prepárate para verificar tu voz",
@@ -101,6 +102,7 @@ export default function Prompts(language) {
           VOICE_READY_SUBTITLE: "You can now use your voice instead of a password to securely log in",
           /* Prompts for Enrollment and Verification Flow */
           LOOK_INTO_CAM: "Please look into the camera",
+          GET_READY: "Get ready...",
           GET_ENROLLED: "There you are, let's get you enrolled",
           GET_VERIFIED: "There you are, let's get you verified",
           READY_FOR_VOICE_VERIFICATION: "Please get ready to verify your voice",

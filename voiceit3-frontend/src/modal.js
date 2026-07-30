@@ -280,7 +280,40 @@ export default function Modal(mRef, language) {
       'elName': 'imageCanvas',
       'nodeName': 'canvas',
       'parent': 'overlayHolder'
-    },{
+    }, {
+      // 3-2-1 countdown scrim + big gold number, centered over the camera
+      // (matches voiceit.io/demo). Hidden until runCountdown() reveals it.
+      'styles': {
+        'display': 'none', 'position': 'absolute', 'top': '0', 'left': '0',
+        'width': '100%', 'height': '100%', 'zIndex': '20',
+        'alignItems': 'center', 'justifyContent': 'center',
+        'background': 'rgba(0,0,0,0.5)', 'borderRadius': '16px'
+      },
+      'attributes': { 'class': 'viCountdownOverlay' },
+      'nodeName': 'div', 'elName': 'countdownOverlay', 'parent': 'overlayHolder'
+    }, {
+      'styles': {
+        'color': '#FCBC3D', 'fontWeight': '700', 'fontSize': '96px', 'lineHeight': '1',
+        'fontFamily': "'branding', system-ui, sans-serif"
+      },
+      'attributes': { 'class': 'viCountdownNumber' },
+      'nodeName': 'div', 'elName': 'countdownNumber', 'parent': 'countdownOverlay', 'text': '3'
+    }, {
+      // REC badge (red dot + "REC Ns" remaining), top-left over the camera.
+      'styles': {
+        'display': 'none', 'position': 'absolute', 'top': '10px', 'left': '10px',
+        'zIndex': '21', 'alignItems': 'center', 'gap': '6px',
+        'background': 'rgba(0,0,0,0.6)', 'borderRadius': '4px', 'padding': '4px 8px'
+      },
+      'attributes': { 'class': 'viRecBadge' },
+      'nodeName': 'div', 'elName': 'recBadge', 'parent': 'overlayHolder'
+    }, {
+      'styles': { 'width': '10px', 'height': '10px', 'borderRadius': '999px', 'background': '#FF4842' },
+      'nodeName': 'div', 'elName': 'recDot', 'parent': 'recBadge'
+    }, {
+      'styles': { 'color': '#FFFFFF', 'fontSize': '13px', 'fontWeight': '600' },
+      'nodeName': 'span', 'elName': 'recText', 'parent': 'recBadge', 'text': 'REC'
+    }, {
       'styles':{
         'fontStyle': 'normal',
         'maxWidth': '300px',
@@ -623,6 +656,66 @@ export default function Modal(mRef, language) {
       var d = VoiceItModalRef.domRef['stepDot'+i];
       if(d){ d.className = 'viStepDot' + (i === activeIndex ? ' active' : ''); }
     }
+  }
+
+  // Short 880Hz beep via Web Audio — same tone as voiceit.io/demo (playBeep).
+  VoiceItModalRef.playBeep = function(){
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if(!Ctx){ return; }
+      var ctx = new Ctx();
+      var osc = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      gain.gain.value = 0.3;
+      osc.start();
+      osc.stop(ctx.currentTime + 0.15);
+      setTimeout(function(){ try { ctx.close(); } catch(e){} }, 300);
+    } catch(e){ /* audio not available — silent */ }
+  }
+
+  // 3-2-1 countdown over the camera, then one beep and onDone() — mirrors the
+  // "Get ready..." + big gold number pre-roll on voiceit.io/demo.
+  VoiceItModalRef.runCountdown = function(onDone){
+    var overlay = VoiceItModalRef.domRef.countdownOverlay;
+    var numEl   = VoiceItModalRef.domRef.countdownNumber;
+    if(!overlay || !numEl){ if(onDone){ onDone(); } return; }
+    var n = 3;
+    overlay.style.display = 'flex';
+    numEl.textContent = String(n);
+    var tick = function(){
+      n -= 1;
+      if(n > 0){
+        numEl.textContent = String(n);
+        VoiceItModalRef.countdownTimer = setTimeout(tick, 1000);
+      } else {
+        overlay.style.display = 'none';
+        VoiceItModalRef.playBeep();
+        if(onDone){ onDone(); }
+      }
+    };
+    VoiceItModalRef.countdownTimer = setTimeout(tick, 1000);
+  }
+
+  // "REC Ns" badge that counts the remaining seconds down while recording.
+  VoiceItModalRef.showRecBadge = function(durationSec){
+    var badge = VoiceItModalRef.domRef.recBadge;
+    var text  = VoiceItModalRef.domRef.recText;
+    if(!badge || !text){ return; }
+    var remaining = durationSec;
+    badge.style.display = 'flex';
+    text.textContent = 'REC ' + remaining + 's';
+    if(VoiceItModalRef.recBadgeTimer){ clearInterval(VoiceItModalRef.recBadgeTimer); }
+    VoiceItModalRef.recBadgeTimer = setInterval(function(){
+      remaining -= 1;
+      if(remaining <= 0){ VoiceItModalRef.hideRecBadge(); return; }
+      text.textContent = 'REC ' + remaining + 's';
+    }, 1000);
+  }
+  VoiceItModalRef.hideRecBadge = function(){
+    if(VoiceItModalRef.recBadgeTimer){ clearInterval(VoiceItModalRef.recBadgeTimer); VoiceItModalRef.recBadgeTimer = null; }
+    if(VoiceItModalRef.domRef.recBadge){ VoiceItModalRef.domRef.recBadge.style.display = 'none'; }
   }
 
   // Result CARD — icon + label in a tinted header over a message body, boxed

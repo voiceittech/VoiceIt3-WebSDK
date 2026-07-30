@@ -628,6 +628,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
     });
 
     voiceIt3ObjRef.player.on('finishRecord', function() {
+      voiceIt3ObjRef.modal.hideRecBadge();
       if (voiceIt3ObjRef.player.recordedData !== undefined) {
         //check the size of the file
         if (voiceIt3ObjRef.player.recordedData.size > 0){
@@ -727,44 +728,32 @@ voiceIt3ObjRef.initModalClickListeners = function(){
 
   ///REFACTOR
   voiceIt3ObjRef.startView = function() {
-    if (voiceIt3ObjRef.type.action === 'Verification' && voiceIt3ObjRef.type.biometricType === 'voice') {
-      voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('VERIFY'));
-      voiceIt3ObjRef.modal.revealWaveform(500);
-    }
+    var bt = voiceIt3ObjRef.type.biometricType;
 
-      if (voiceIt3ObjRef.type.biometricType === 'face') {
+    // Demo pre-roll: "Get ready..." + a 3-2-1 countdown over the camera, then a
+    // beep and the actual recording — exactly like voiceit.io/demo. The phrase /
+    // instruction and REC badge appear the instant recording begins.
+    if (voiceIt3ObjRef.modal.domRef.readyButton) {
+      voiceIt3ObjRef.modal.domRef.readyButton.style.display = 'none';
+    }
+    voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('GET_READY'));
+
+    voiceIt3ObjRef.modal.runCountdown(function(){
+      if (bt === 'face') {
         voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('LOOK_INTO_CAM'));
-        voiceIt3ObjRef.modal.createProgressCircle(3200);
-        voiceIt3ObjRef.modal.revealProgressCircle();
-      } else if (voiceIt3ObjRef.type.biometricType === 'video') {
-          voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('VERIFY'));
-          voiceIt3ObjRef.modal.revealWaveform(500);
-          voiceIt3ObjRef.modal.createVideoCircle();
-          voiceIt3ObjRef.modal.createProgressCircle(5200);
-          voiceIt3ObjRef.modal.domRef.progressCircle.style.display = 'block';
-          voiceIt3ObjRef.modal.revealProgressCircle();
-      } else if (voiceIt3ObjRef.type.biometricType === 'voice'){
-          voiceIt3ObjRef.modal.revealWaveform(500);
-          voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('VERIFY'));
+      } else {
+        voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('VERIFY'));
+        voiceIt3ObjRef.modal.revealWaveform(500);
       }
 
-      // if (voiceIt3ObjRef.type.biometricType === 'voice') {
-      //   voiceIt3ObjRef.modal.revealWaveform(500);
-      // } else if (voiceIt3ObjRef.type.biometricType === 'face') {
-      //   voiceIt3ObjRef.modal.createProgressCircle(3200);
-      //   voiceIt3ObjRef.modal.revealProgressCircle();
-      // } else if (voiceIt3ObjRef.type.biometricType === 'video') {
-      //   voiceIt3ObjRef.modal.createVideoCircle();
-      //   voiceIt3ObjRef.modal.createProgressCircle(5200);
-      //   voiceIt3ObjRef.modal.domRef.progressCircle.style.display = 'block';
-      //   voiceIt3ObjRef.modal.revealProgressCircle();
-      // }
+      var duration = (bt === 'face') ? 3 : 5;
+      voiceIt3ObjRef.modal.showRecBadge(duration);
 
-    vi$.fadeOut(voiceIt3ObjRef.modal.domRef.outerOverlay, 1500, null, 0.3);
-    voiceIt3ObjRef.modal.domRef.readyButton.style.display = 'none';
-    if(voiceIt3ObjRef.player) {
-      voiceIt3ObjRef.player.record().start();
-    }
+      vi$.fadeOut(voiceIt3ObjRef.modal.domRef.outerOverlay, 1500, null, 0.3);
+      if (voiceIt3ObjRef.player) {
+        voiceIt3ObjRef.player.record().start();
+      }
+    });
   };
 
   voiceIt3ObjRef.continueEnrollment = function(response) {
@@ -813,32 +802,24 @@ voiceIt3ObjRef.initModalClickListeners = function(){
       }
   }
 
-    // Handle re-recording and prompts/animations along with it (for voice/video)
+    // Re-record the next enrollment clip (voice/video): run the SAME "Get
+    // ready..." + 3-2-1 countdown + beep before EVERY clip, exactly like the demo.
     if (voiceIt3ObjRef.enrollCounter < 3 && voiceIt3ObjRef.type.biometricType !== 'face') {
       setTimeout(function() {
-        voiceIt3ObjRef.modal.hideProgressCircle(350);
-        if (voiceIt3ObjRef.enrollCounter >= 0) {
-            voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('ENROLL_' + voiceIt3ObjRef.enrollCounter));
-        }
-
-        if (voiceIt3ObjRef.type.biometricType === 'video') {
-          vi$.fadeOut(voiceIt3ObjRef.modal.domRef.outerOverlay, 500, function(){
-            voiceIt3ObjRef.player.record().start();
-          });
-        }
-
-        if (voiceIt3ObjRef.type.biometricType === 'voice') {
-          voiceIt3ObjRef.modal.hideProgressCircle();
-          voiceIt3ObjRef.player.record().start();
-        } else {
-            voiceIt3ObjRef.modal.hideProgressCircle(350);
-            if (voiceIt3ObjRef.type.biometricType === 'face'){
-              voiceIt3ObjRef.modal.createProgressCircle(3200);
-            } else {
-            voiceIt3ObjRef.modal.createProgressCircle(5200);
-            }
-            voiceIt3ObjRef.modal.revealProgressCircle(350);
-        }
+        var bt = voiceIt3ObjRef.type.biometricType;
+        voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('GET_READY'));
+        voiceIt3ObjRef.modal.runCountdown(function(){
+          voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('VERIFY'));
+          voiceIt3ObjRef.modal.revealWaveform(500);
+          voiceIt3ObjRef.modal.showRecBadge(5);
+          if (bt === 'voice') {
+            if (voiceIt3ObjRef.player) { voiceIt3ObjRef.player.record().start(); }
+          } else {
+            vi$.fadeOut(voiceIt3ObjRef.modal.domRef.outerOverlay, 500, function(){
+              if (voiceIt3ObjRef.player) { voiceIt3ObjRef.player.record().start(); }
+            });
+          }
+        });
       }, 2000);
     }
   };
@@ -904,6 +885,11 @@ voiceIt3ObjRef.initModalClickListeners = function(){
   voiceIt3ObjRef.destroy = function(destroyFinished) {
     window.cancelAnimationFrame(voiceIt3ObjRef.animationId);
     voiceIt3ObjRef.isInitiated = false;
+    // Clear any in-flight countdown / REC-badge timers so they don't fire after teardown.
+    if (voiceIt3ObjRef.modal) {
+      if (voiceIt3ObjRef.modal.countdownTimer) { clearTimeout(voiceIt3ObjRef.modal.countdownTimer); voiceIt3ObjRef.modal.countdownTimer = null; }
+      if (voiceIt3ObjRef.modal.hideRecBadge) { voiceIt3ObjRef.modal.hideRecBadge(); }
+    }
     vi$.remove('#viVideo');
     if (voiceIt3ObjRef.type.biometricType !== 'voice') {
       vi$.remove(voiceIt3ObjRef.modal.domRef.imageCanvas);
