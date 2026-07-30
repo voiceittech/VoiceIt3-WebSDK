@@ -383,3 +383,11 @@
 /* Remove any legacy circular mask/ring SVG overlay in the camera area */
 .viModal .image svg { display: none !important; }
 .viProgressCircle, .viVideoCircle { display: none !important; }
+
+/* The videojs recorder (#videoRecord.video-js) is a child of <body>, OUTSIDE
+   .viModal, so scoped overrides miss it and it keeps videojs's #000 background.
+   Neutralize it unscoped (it's display:none, but stay robust if it ever shows). */
+.video-js, #videoRecord, #videoRecord .vjs-tech, .vjs-tech {
+  background: transparent !important;
+  background-color: transparent !important;
+}

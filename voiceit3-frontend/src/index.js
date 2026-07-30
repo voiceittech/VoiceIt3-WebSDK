@@ -939,13 +939,14 @@ voiceIt3ObjRef.initModalClickListeners = function(){
   };
 
   voiceIt3ObjRef.createOverlay = function() {
+    // Demo-match: NO circular black vignette. The legacy overlay painted a black
+    // rectangle with a circular hole punched out (even-odd fill), which cropped
+    // the camera to a circle with a black border. voiceit.io/demo shows a clean
+    // rounded rectangle, so keep this overlay canvas fully transparent instead.
     var ctx2 = voiceIt3ObjRef.modal.domRef.overlayCanvas;
+    if (!ctx2) { return; }
     var context2 = ctx2.getContext('2d');
-    context2.beginPath();
-    context2.arc(230, 148, 131, 0, 2 * Math.PI);
-    context2.rect(460, 0, -460, 345);
-    context2.fillStyle = 'rgba(0,0,0,1.0)';
-    context2.fill('evenodd');
+    context2.clearRect(0, 0, ctx2.width || 460, ctx2.height || 345);
   };
 
   return this;
