@@ -437,3 +437,24 @@
   padding: 20px 0 10px !important;
 }
 #viMessage, .viMessage { display: inline-block !important; line-height: 1.5 !important; }
+
+/* ============ issue3 fix: gray band under the camera ============
+   The .content block was pulled UP over the camera bottom (bottom:3.5em), so the
+   countdown scrim (which covers the camera) tinted that overlapping white strip
+   into a gray band with the dots dimmed on it. Keep content in normal flow
+   directly BELOW the camera so nothing overlaps the scrim. */
+.viModal .content {
+  position: relative !important;
+  bottom: 0 !important;
+  top: 0 !important;
+  margin: 0 !important;
+}
+/* Give the camera holder a fixed height so the media fills it exactly (object-fit
+   cover) and the content sits flush beneath — no seam, no gray. */
+.viModal .overlayHolder { min-height: 0 !important; height: 322px !important; }
+.viModal #videoLiveness, .viModal .viCanvas, .viModal .viImageCanvas,
+.viModal video, .viModal .video-js, .viModal .vjs-tech {
+  height: 322px !important;
+}
+/* Countdown scrim + REC badge stay clipped to the camera holder only. */
+.viCountdownOverlay { height: 322px !important; }

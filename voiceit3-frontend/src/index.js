@@ -672,6 +672,14 @@ voiceIt3ObjRef.initModalClickListeners = function(){
       vi$.fadeIn(voiceIt3ObjRef.modal.domRef.outerOverlay, 300, null, 0.3);
       voiceIt3ObjRef.modal.showWaitingLoader(true);
 
+      // Diagnostic: what container/codec did the browser actually record? Chrome
+      // records WebM; the backend labels the upload .mp4. A mismatch API 3.0
+      // can't decode is a prime suspect for enroll failures. Logs type + size.
+      try {
+        var rd = voiceIt3ObjRef.player && voiceIt3ObjRef.player.recordedData;
+        if (rd) { console.log('VoiceIt recorded blob →', voiceIt3ObjRef.type.biometricType, 'type:', rd.type, 'size:', rd.size); }
+      } catch(e){}
+
       if(
         voiceIt3ObjRef.type.biometricType === 'voice' &&
         voiceIt3ObjRef.type.action === 'Verification'
@@ -768,6 +776,18 @@ voiceIt3ObjRef.initModalClickListeners = function(){
     });
   };
 
+  // Show a meaningful message for any non-SUCC response code. Falls back to the
+  // server's own message, then to the raw code — so the UI NEVER shows a bare
+  // "undefined" for an unmapped API 3.0 code, and the exact code stays visible
+  // for diagnosis. Always logs the full response for the console.
+  voiceIt3ObjRef.showResponseMessage = function(response){
+    var code = response && response.responseCode;
+    var mapped = code ? voiceIt3ObjRef.prompts.getPrompt(code) : null;
+    var msg = mapped || (response && response.message) || ('Enrollment error' + (code ? ' (' + code + ')' : ''));
+    console.warn('VoiceIt enrollment response:', code, response && response.message, response);
+    voiceIt3ObjRef.modal.displayMessage(msg);
+  };
+
   voiceIt3ObjRef.continueEnrollment = function(response) {
     // Handle the response (can use displayAppropriateMessage() method- will see it later on)
     if (voiceIt3ObjRef.type.biometricType !== 'face') {
@@ -788,7 +808,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
           voiceIt3ObjRef.exitOut(true, response);
         }
       } else {
-        voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt(response.responseCode));
+        voiceIt3ObjRef.showResponseMessage(response);
       }
         voiceIt3ObjRef.modal.removeWaitingLoader();
 
@@ -810,7 +830,7 @@ voiceIt3ObjRef.initModalClickListeners = function(){
             voiceIt3ObjRef.player.record().start();
           });
         }, 2000);
-        voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt(response.responseCode));
+        voiceIt3ObjRef.showResponseMessage(response);
       }
   }
 
