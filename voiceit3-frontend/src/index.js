@@ -54,6 +54,9 @@ export function initialize(backendEndpointPath, language){
 
     //REFACTOR
     voiceIt3ObjRef.modal = new Modal(voiceIt3ObjRef, language);
+    // Theme: honor an explicit setTheme(); otherwise follow the OS preference.
+    voiceIt3ObjRef.modal.theme = voiceIt3ObjRef.uiTheme ||
+      ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
     voiceIt3ObjRef.apiRef = new api(voiceIt3ObjRef.modal, backendEndpointPath);
     voiceIt3ObjRef.enrollCounter = 0;
     // Variables needed for the audio/video streams, and for destroying instances
@@ -76,6 +79,16 @@ export function initialize(backendEndpointPath, language){
 
   voiceIt3ObjRef.setThemeColor = function(hexColor){
     Colors.MAIN_THEME_COLOR = hexColor;
+  }
+
+  // Force the modal into 'light' or 'dark'. If never called, the modal follows
+  // the OS color-scheme preference (see setupView).
+  voiceIt3ObjRef.setTheme = function(theme){
+    voiceIt3ObjRef.uiTheme = (theme === 'dark') ? 'dark' : 'light';
+    if (voiceIt3ObjRef.modal) {
+      voiceIt3ObjRef.modal.theme = voiceIt3ObjRef.uiTheme;
+      if (voiceIt3ObjRef.modal.applyTheme) { voiceIt3ObjRef.modal.applyTheme(voiceIt3ObjRef.uiTheme); }
+    }
   }
 
   voiceIt3ObjRef.setPhrase = function(phrase) {
@@ -540,8 +553,9 @@ voiceIt3ObjRef.initModalClickListeners = function(){
       voiceIt3ObjRef.displayAppropriateMessage(response);
     } else {
       voiceIt3ObjRef.attempts++;
-      //continue to verify
-      if (voiceIt3ObjRef.attempts > MAX_ATTEMPTS) {
+      // Verification allows exactly THREE attempts: fail #3 (attempts === 3)
+      // ends the flow (>= not >, so it's 3 tries, not 4).
+      if (voiceIt3ObjRef.attempts >= MAX_ATTEMPTS) {
         voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('MAX_ATTEMPTS'));
         voiceIt3ObjRef.completionCallback(false, response);
         voiceIt3ObjRef.exitOut(false, response);
@@ -575,7 +589,9 @@ voiceIt3ObjRef.initModalClickListeners = function(){
     if (response.responseCode === 'SUCC') {
       if (voiceIt3ObjRef.enrollCounter < 3) {
         voiceIt3ObjRef.enrollCounter++;
-        voiceIt3ObjRef.modal.setStepDot(Math.min(voiceIt3ObjRef.enrollCounter, 2));
+        // Pass the raw counter (not capped at 2) so after the 3rd success all
+        // three dots are < activeIndex => all green (done).
+        voiceIt3ObjRef.modal.setStepDot(voiceIt3ObjRef.enrollCounter);
         voiceIt3ObjRef.continueEnrollment(response);
       }
     } else {
@@ -869,30 +885,27 @@ voiceIt3ObjRef.initModalClickListeners = function(){
   voiceIt3ObjRef.continueVerification = function() {
     if(voiceIt3ObjRef.destroyed){ return ;}
     setTimeout(function() {
-      voiceIt3ObjRef.modal.hideProgressCircle(350);
-      if (voiceIt3ObjRef.type.biometricType === 'face') {
+      var bt = voiceIt3ObjRef.type.biometricType;
+      // Re-run the SAME "Get ready..." + 3-2-1 countdown + beep before every
+      // verification RETRY, just like the first attempt and the demo.
+      voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('GET_READY'));
+      voiceIt3ObjRef.modal.runCountdown(function(){
+        if (bt === 'face') {
           voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('LOOK_INTO_CAM'));
-      } else {
+        } else {
           voiceIt3ObjRef.modal.displayMessage(voiceIt3ObjRef.prompts.getPrompt('VERIFY'));
-      }
-      if (voiceIt3ObjRef.type.biometricType === 'voice') {
-        voiceIt3ObjRef.modal.revealWaveform(500, function() {
-          voiceIt3ObjRef.player.record().start();
-        });
-      } else {
-        voiceIt3ObjRef.modal.hideProgressCircle(350);
-        vi$.fadeOut(voiceIt3ObjRef.modal.domRef.outerOverlay, 500, function(){
-          if(voiceIt3ObjRef.player){
-            voiceIt3ObjRef.player.record().start();
-          }
-          voiceIt3ObjRef.modal.revealProgressCircle(350);
-          if (voiceIt3ObjRef.type.biometricType === 'face'){
-            voiceIt3ObjRef.modal.createProgressCircle(3200);
-          } else {
-          voiceIt3ObjRef.modal.createProgressCircle(5200);
-          }
-        });
-      }
+          voiceIt3ObjRef.modal.revealWaveform(500);
+        }
+        var duration = (bt === 'face') ? 3 : 5;
+        voiceIt3ObjRef.modal.showRecBadge(duration);
+        if (bt === 'voice') {
+          if (voiceIt3ObjRef.player) { voiceIt3ObjRef.player.record().start(); }
+        } else {
+          vi$.fadeOut(voiceIt3ObjRef.modal.domRef.outerOverlay, 500, function(){
+            if (voiceIt3ObjRef.player) { voiceIt3ObjRef.player.record().start(); }
+          });
+        }
+      });
     }, 2000);
   };
 

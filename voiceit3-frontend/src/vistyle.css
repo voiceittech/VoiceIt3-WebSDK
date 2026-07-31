@@ -458,3 +458,50 @@
 }
 /* Countdown scrim + REC badge stay clipped to the camera holder only. */
 .viCountdownOverlay { height: 322px !important; }
+
+/* ============ Green "done" step dots + dark theme ============ */
+/* Completed enrollments turn green (success color); the active step stays gold. */
+.viStepDot.done { background:#75B09C !important; color:#FFFFFF !important; }
+
+/* ---- Dark theme: opt-in via setTheme('dark') or the OS preference. The theme
+   class sits on the modal root (.viModal); scope every override under it and use
+   .viModal.viTheme-dark so it beats the light `.ui.modal ...` rules. ---- */
+.viModal.viTheme-dark .ui.card {
+  background:#1C1C1E !important;
+  color:#F5F5F7 !important;
+  box-shadow:0 24px 60px rgba(0,0,0,0.55) !important;
+}
+.viModal.viTheme-dark .image,
+.viModal.viTheme-dark .content,
+.viModal.viTheme-dark .extra.content,
+.viModal.viTheme-dark .overlayHolder,
+.viModal.viTheme-dark .video-js,
+.viModal.viTheme-dark .vjs-record { background:#1C1C1E !important; }
+
+/* Camera media keeps a slightly lifted dark backing (not pure black). */
+.viModal.viTheme-dark #videoLiveness,
+.viModal.viTheme-dark .viCanvas,
+.viModal.viTheme-dark .viImageCanvas,
+.viModal.viTheme-dark video,
+.viModal.viTheme-dark .vjs-tech { background:#000 !important; }
+
+/* Text + control icons go light. */
+.viModal.viTheme-dark .ui.header,
+.viModal.viTheme-dark .header,
+.viModal.viTheme-dark .viReenrollMessage,
+.viModal.viTheme-dark span,
+.viModal.viTheme-dark p { color:#F5F5F7 !important; }
+.viModal.viTheme-dark .ic { color:#F5F5F7 !important; }
+.viModal.viTheme-dark .ic:hover, .viModal.viTheme-dark .arrowButton:hover { color:#FCBC3D !important; }
+
+/* Inactive step dots: darker neutral so they read on the dark card. */
+.viModal.viTheme-dark .viStepDot { background:#3A3A3C !important; color:#B0B0B5 !important; }
+.viModal.viTheme-dark .viStepDot.active { background:#FCBC3D !important; color:#0A0A0A !important; }
+.viModal.viTheme-dark .viStepDot.done { background:#75B09C !important; color:#FFFFFF !important; }
+
+/* Result card on dark. */
+.viModal.viTheme-dark .viResultCard { background:#2C2C2E !important; border-color:#3A3A3C !important; }
+.viModal.viTheme-dark .viResultBody { color:#C7C7CC !important; }
+
+/* Ready/record button keeps the gold pill (works on both themes). */
+.viModal.viTheme-dark .viReadyButton { color:#0A0A0A !important; }

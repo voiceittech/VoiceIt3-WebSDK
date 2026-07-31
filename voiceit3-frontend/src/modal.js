@@ -13,6 +13,8 @@ export default function Modal(mRef, language) {
   //https://www.w3schools.com/js/js_htmldom_elements.asp
   VoiceItModalRef.domRef = {};
   VoiceItModalRef.mainRef = mRef;
+  // 'light' (default) or 'dark' — see applyTheme() + the .viTheme-dark CSS.
+  VoiceItModalRef.theme = 'light';
   // Array to keep track of cleanup functions
   VoiceItModalRef.cleanupFunctions = [];
   //each object in this array has the following keys
@@ -403,11 +405,14 @@ export default function Modal(mRef, language) {
   VoiceItModalRef.show = function(){
     VoiceItModalRef.domRef.modalDimBackground.className = 'ui dimmer modals page transition visible active';
     VoiceItModalRef.domRef.voiceItModal.className = 'viModal ui modal transition visible active';
+    // show()/hide() reset className wholesale, which drops the theme class — re-add it.
+    VoiceItModalRef.applyTheme(VoiceItModalRef.theme);
   }
 
   VoiceItModalRef.hide = function(){
     VoiceItModalRef.domRef.modalDimBackground.className = '';
     VoiceItModalRef.domRef.voiceItModal.className = 'viModal ui modal';
+    VoiceItModalRef.applyTheme(VoiceItModalRef.theme);
     VoiceItModalRef.domRef.modalDimBackground.style.opacity = 1.0;
     VoiceItModalRef.domRef.voiceItModal.style.opacity = 1.0;
   }
@@ -415,6 +420,18 @@ export default function Modal(mRef, language) {
   VoiceItModalRef.build = function() {
     VoiceItModalRef.destroy();
     VoiceItModalRef.buildModal();
+    VoiceItModalRef.applyTheme(VoiceItModalRef.theme);
+  }
+
+  // Light/dark theme — stamps a class on the modal root; the dark palette lives
+  // in vistyle.css under `.viTheme-dark`. Default is light.
+  VoiceItModalRef.applyTheme = function(theme){
+    VoiceItModalRef.theme = (theme === 'dark') ? 'dark' : 'light';
+    var el = VoiceItModalRef.domRef.voiceItModal;
+    if(el){
+      el.classList.remove('viTheme-light', 'viTheme-dark');
+      el.classList.add('viTheme-' + VoiceItModalRef.theme);
+    }
   }
 
   // Circle Helper Methods
@@ -638,7 +655,8 @@ export default function Modal(mRef, language) {
 
   VoiceItModalRef.displayMessage = function(textToSet){
     if(!VoiceItModalRef.domRef.viMessage){ return; }
-    VoiceItModalRef.domRef.viMessage.style.color = '#0A0A0A'; // reset to default dark
+    // Text color follows the theme (light card => dark text, dark card => light text).
+    VoiceItModalRef.domRef.viMessage.style.color = (VoiceItModalRef.theme === 'dark') ? '#F5F5F7' : '#0A0A0A';
     VoiceItModalRef.domRef.viMessage.innerHTML = textToSet;
     VoiceItModalRef.domRef.viMessage.style.opacity = 1.0;
     VoiceItModalRef.domRef.viMessage.style.display = 'inline-block';
@@ -651,10 +669,15 @@ export default function Modal(mRef, language) {
   VoiceItModalRef.hideStepDots = function(){
     if(VoiceItModalRef.domRef.stepDots){ VoiceItModalRef.domRef.stepDots.style.display = 'none'; }
   }
+  // Steps BEFORE activeIndex are completed enrollments -> green ('done');
+  // the active step is gold; the rest are the neutral inactive color.
   VoiceItModalRef.setStepDot = function(activeIndex){
     for(var i=0;i<3;i++){
       var d = VoiceItModalRef.domRef['stepDot'+i];
-      if(d){ d.className = 'viStepDot' + (i === activeIndex ? ' active' : ''); }
+      if(!d){ continue; }
+      if(i < activeIndex){ d.className = 'viStepDot done'; }
+      else if(i === activeIndex){ d.className = 'viStepDot active'; }
+      else { d.className = 'viStepDot'; }
     }
   }
 
