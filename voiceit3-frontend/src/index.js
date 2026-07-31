@@ -27,8 +27,11 @@ const MAX_ATTEMPTS = 3;
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-// iOS Safari MediaRecorder bitrate fix - prevent oversized recordings
-if (isIOS && typeof MediaRecorder !== 'undefined') {
+// Match voiceit.io/demo (Demo.jsx) capture exactly: cap the recording bitrate
+// to 800kbps video / 64kbps audio on ALL browsers (the demo passes these to
+// every MediaRecorder, not just iOS). Prevents oversized recordings and keeps
+// the byte stream the API sees identical to the website demo's.
+if (typeof MediaRecorder !== 'undefined') {
   const OriginalMediaRecorder = MediaRecorder;
   window.MediaRecorder = function(stream, options) {
     options = options || {};
@@ -467,7 +470,10 @@ voiceIt3ObjRef.initModalClickListeners = function(){
       video.setAttribute('webkit-playsinline', 'true');
     }
     document.body.appendChild(video);
-    var videoConstraints = isIOS ? { width: { ideal: 480 }, height: { ideal: 360 }, facingMode: 'user' } : true;
+    // Match voiceit.io/demo (Demo.jsx) getUserMedia video constraints exactly on
+    // every browser: front camera, 640x480 ideal (was bare `true` on desktop and
+    // 480x360 on iOS — now identical to the website demo).
+    var videoConstraints = { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } };
     voiceIt3ObjRef.player = videojs('videoRecord', {
       controls: false,
       width: 640,
@@ -500,7 +506,10 @@ voiceIt3ObjRef.initModalClickListeners = function(){
       video.setAttribute('webkit-playsinline', 'true');
     }
     document.body.appendChild(video);
-    var videoConstraints = isIOS ? { width: { ideal: 480 }, height: { ideal: 360 }, facingMode: 'user' } : true;
+    // Match voiceit.io/demo (Demo.jsx) getUserMedia video constraints exactly on
+    // every browser: front camera, 640x480 ideal (was bare `true` on desktop and
+    // 480x360 on iOS — now identical to the website demo).
+    var videoConstraints = { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } };
     voiceIt3ObjRef.player = videojs('videoRecord', {
       controls: true,
       width: 640,
