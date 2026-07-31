@@ -478,12 +478,15 @@
 .viModal.viTheme-dark .video-js,
 .viModal.viTheme-dark .vjs-record { background:#1C1C1E !important; }
 
-/* Camera media keeps a slightly lifted dark backing (not pure black). */
+/* Camera media MUST stay transparent even in dark mode. The visible preview is
+   drawn into .viImageCanvas (z0); the overlay .viCanvas (z2) sits transparent
+   ON TOP of it. Giving these an opaque background covers the live feed (the
+   "I only see myself in light mode" bug). Keep them transparent in both themes. */
 .viModal.viTheme-dark #videoLiveness,
 .viModal.viTheme-dark .viCanvas,
 .viModal.viTheme-dark .viImageCanvas,
 .viModal.viTheme-dark video,
-.viModal.viTheme-dark .vjs-tech { background:#000 !important; }
+.viModal.viTheme-dark .vjs-tech { background:transparent !important; }
 
 /* Text + control icons go light. */
 .viModal.viTheme-dark .ui.header,
@@ -502,6 +505,13 @@
 /* Result card on dark. */
 .viModal.viTheme-dark .viResultCard { background:#2C2C2E !important; border-color:#3A3A3C !important; }
 .viModal.viTheme-dark .viResultBody { color:#C7C7CC !important; }
+
+/* Countdown number: dark gray on light, white on dark (no longer gold). The
+   scrim flips with the theme so the number stays readable over the camera. */
+.viCountdownNumber { color:#4A4A4A !important; }
+.viCountdownOverlay { background:rgba(255,255,255,0.45) !important; }
+.viModal.viTheme-dark .viCountdownNumber { color:#FFFFFF !important; }
+.viModal.viTheme-dark .viCountdownOverlay { background:rgba(0,0,0,0.55) !important; }
 
 /* Ready/record button keeps the gold pill (works on both themes). */
 .viModal.viTheme-dark .viReadyButton { color:#0A0A0A !important; }

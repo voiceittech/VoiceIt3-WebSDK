@@ -295,7 +295,7 @@ export default function Modal(mRef, language) {
       'nodeName': 'div', 'elName': 'countdownOverlay', 'parent': 'overlayHolder'
     }, {
       'styles': {
-        'color': '#FCBC3D', 'fontWeight': '700', 'fontSize': '96px', 'lineHeight': '1',
+        'color': '#4A4A4A', 'fontWeight': '700', 'fontSize': '96px', 'lineHeight': '1',
         'fontFamily': "'branding', system-ui, sans-serif"
       },
       'attributes': { 'class': 'viCountdownNumber' },
